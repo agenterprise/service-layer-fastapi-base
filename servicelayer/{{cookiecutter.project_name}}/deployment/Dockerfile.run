@@ -1,0 +1,8 @@
+# Dockerfile.jinja2 for multi-stage build
+FROM python:3.12-slim 
+WORKDIR /env
+COPY --from=build_{{cookiecutter.project_build_id}} /env /env
+ENV VIRTUAL_ENV=/env/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV PYTHONPATH=/env
+CMD ["uv", "run", "python", "app/main.py"]

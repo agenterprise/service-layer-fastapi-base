@@ -1,0 +1,9 @@
+{
+    "templates": {
+        "service": {
+            "path": "./servicelayer",
+            "title": "Service Layer",
+            "description": "A cookiecutter template for a service FAST API layer"
+        }
+    }
+}
