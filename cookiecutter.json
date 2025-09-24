@@ -1,5 +1,10 @@
 {
     "templates": {
+        "project": {
+            "path": "./projectlayer",
+            "title": "Project Layer",
+            "description": "A cookiecutter template for project setup"
+        }
         "service": {
             "path": "./servicelayer",
             "title": "Service Layer",
