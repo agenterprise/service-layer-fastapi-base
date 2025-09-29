@@ -7,6 +7,7 @@ crosscutting = CrossCuttingSettings()
 class BaseEnvironmentContext():
     
     from app.gen.domainmodel.modelregistry import BaseModelregistry
+    from app.gen.domainmodel.toolregistry import BaseToolregistry
 
 
     def IoCContainerBean(self,
