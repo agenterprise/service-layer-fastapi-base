@@ -37,28 +37,28 @@ class BaseEnvironmentContext():
         return baseToolregistry
     
     {% for key, llm in cookiecutter.llms.items() %}
-    def {{llm.uid | aiurnpath | capitalize }}LLMBean(self):
-        from app.gen.llm.{{llm.uid | aiurnpath}}.model import BaseLanguageModel as {{llm.uid | aiurnpath | capitalize}}
+    def {{llm.uid | aiurnvar | capitalize }}LLMBean(self):
+        from app.gen.llm.{{llm.uid | aiurnimport}}.model import BaseLanguageModel as {{llm.uid | aiurnvar | capitalize}}
         return {{llm.uid | aiurnpath | capitalize}}()
     {% endfor %}
 
     {% for key, tool in cookiecutter.tools.items() %}
-    def {{tool.uid | aiurnpath | capitalize }}ToolBean(self):
-        from app.gen.tool.{{tool.uid | aiurnpath}}.tool import BaseTool as {{tool.uid | aiurnpath | capitalize}}
-        return {{tool.uid | aiurnpath | capitalize}}()
+    def {{tool.uid | aiurnvar | capitalize }}ToolBean(self):
+        from app.gen.tool.{{tool.uid | aiurnimport}}.tool import BaseTool as {{tool.uid | aiurnvar | capitalize}}
+        return {{tool.uid | aiurnvar | capitalize}}()
     {% endfor %}
 
     {% for key, agent in cookiecutter.agents.items() %}
-    def {{agent.uid | aiurnpath | capitalize }}AgentBean(self, modelregistry:BaseModelregistry=None, toolregistry:BaseToolregistry=None):
-        from app.gen.agents.{{agent.uid | aiurnpath}}.agent import BaseAgent as {{agent.uid | aiurnpath | capitalize}}
+    def {{agent.uid | aiurnvar | capitalize }}AgentBean(self, modelregistry:BaseModelregistry=None, toolregistry:BaseToolregistry=None):
+        from app.gen.agents.{{agent.uid | aiurnimport}}.agent import BaseAgent as {{agent.uid | aiurnvar | capitalize}}
         modelregistry = modelregistry or self.ModelRegistryBean()
         toolregistry = toolregistry or self.ToolRegistryBean()
-        return {{agent.uid | aiurnpath | capitalize}}(modelregistry=modelregistry, toolregistry=toolregistry)
+        return {{agent.uid | aiurnvar | capitalize}}(modelregistry=modelregistry, toolregistry=toolregistry)
     {% endfor %}
 
-    def RouterBean(self,{% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnpath}}Agent,{% endfor %}):
+    def RouterBean(self,{% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}Agent,{% endfor %}):
         from app.gen.routes.router import BaseRouter as Router
-        return Router({% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnpath}}={{agent.uid | aiurnpath}}Agent,{% endfor %})
+        return Router({% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}={{agent.uid | aiurnvar}}Agent,{% endfor %})
     
     def app(self):
 
