@@ -39,7 +39,7 @@ class BaseEnvironmentContext():
     {% for key, llm in cookiecutter.llms.items() %}
     def {{llm.uid | aiurnvar | capitalize }}LLMBean(self):
         from app.gen.llm.{{llm.uid | aiurnimport}}.model import BaseLanguageModel as {{llm.uid | aiurnvar | capitalize}}
-        return {{llm.uid | aiurnpath | capitalize}}()
+        return {{llm.uid | aiurnvar | capitalize}}()
     {% endfor %}
 
     {% for key, tool in cookiecutter.tools.items() %}
