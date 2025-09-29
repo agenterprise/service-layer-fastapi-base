@@ -14,6 +14,8 @@ def app():
             from app.gen.config.base import BaseEnvironmentContext as Context
         if settings.run_environment == EnvEnum.dev:
             from app.ext.config.dev import DevContext as Context
+        if settings.run_environment == EnvEnum.uat:
+            from app.ext.config.uat import UatContext as Context
 
         logger.info(f"Running App in Env Mode: {settings.run_environment}")
         return Context().app()
@@ -28,7 +30,8 @@ def logger_conf():
             from app.gen.config.base import BaseEnvironmentContext as Context
         if settings.run_environment == EnvEnum.dev:
             from app.ext.config.dev import DevContext as Context
-
+        if settings.run_environment == EnvEnum.uat:
+            from app.ext.config.uat import UatContext as Context
 
         logger.info(f"Applying Logging in Env Mode: {settings.run_environment}")
         return Context().logger_conf()
