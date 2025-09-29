@@ -31,11 +31,16 @@ class BaseEnvironmentContext():
         from app.gen.aimodel.registry import baseAimodelregistry
         return baseAimodelregistry
     
+    def ToolRegistryBean(self):
+        from app.gen.tool.registry import baseToolregistry
+        return baseToolregistry
+    
     {% for key, agent in cookiecutter.agents.items() %}
     def {{agent.uid | aiurnpath | capitalize }}AgentBean(self, modelregistry:BaseModelregistry=None):
         from app.gen.agents.{{agent.uid | aiurnpath}}.agent import BaseAgent as {{agent.uid | aiurnpath | capitalize}}
         modelregistry = modelregistry or self.ModelRegistryBean()
-        return {{agent.uid | aiurnpath | capitalize}}(modelregistry=modelregistry)
+        toolregistry = toolregistry or self.ToolRegistryBean()
+        return {{agent.uid | aiurnpath | capitalize}}(modelregistry=modelregistry, toolregistry=toolregistry)
     {% endfor %}
 
     def RouterBean(self,{% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnpath}}Agent,{% endfor %}):
@@ -48,7 +53,7 @@ class BaseEnvironmentContext():
                 middleware=self.HttpMiddlewareBean(), 
                 router=self.RouterBean(self.CookAgentBean(),self.WaiterAgentBean()), 
                 modelregistry=self.ModelRegistryBean(), 
-                toolregistry=None)
+                toolregistry=self.ToolRegistryBean())
         
         return self.AIAppBean(container, title=setting.app_name, version=setting.app_version)
 
