@@ -36,6 +36,18 @@ class BaseEnvironmentContext():
         from app.gen.tool.registry import baseToolregistry
         return baseToolregistry
     
+    {% for key, llm in cookiecutter.llms.items() %}
+    def {{llm.uid | aiurnpath | capitalize }}LLMBean(self):
+        from app.gen.llm.{{llm.uid | aiurnpath}}.model import BaseLanguageModel as {{llm.uid | aiurnpath | capitalize}}
+        return {{llm.uid | aiurnpath | capitalize}}()
+    {% endfor %}
+
+    {% for key, tool in cookiecutter.tools.items() %}
+    def {{tool.uid | aiurnpath | capitalize }}ToolBean(self):
+        from app.gen.tool.{{tool.uid | aiurnpath}}.tool import BaseTool as {{tool.uid | aiurnpath | capitalize}}
+        return {{tool.uid | aiurnpath | capitalize}}()
+    {% endfor %}
+
     {% for key, agent in cookiecutter.agents.items() %}
     def {{agent.uid | aiurnpath | capitalize }}AgentBean(self, modelregistry:BaseModelregistry=None, toolregistry:BaseToolregistry=None):
         from app.gen.agents.{{agent.uid | aiurnpath}}.agent import BaseAgent as {{agent.uid | aiurnpath | capitalize}}
