@@ -25,5 +25,11 @@ DOCKER_BUILDKIT=1 docker build \
 * Automatically remove the container and its associated anonymous volumes when it exits
  
 ```bash
-docker run --publish 9000:9000 --rm {{ cookiecutter.package_name}}
+docker run --publish 9000:9000 --env-file .env --rm {{ cookiecutter.package_name}}
 ```
+
+### Inspect the Image
+```bash
+docker run -it {{ cookiecutter.package_name}} sh
+```
+
