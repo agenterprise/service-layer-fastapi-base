@@ -36,7 +36,7 @@ class BaseEnvironmentContext():
         return baseToolregistry
     
     {% for key, agent in cookiecutter.agents.items() %}
-    def {{agent.uid | aiurnpath | capitalize }}AgentBean(self, modelregistry:BaseModelregistry=None):
+    def {{agent.uid | aiurnpath | capitalize }}AgentBean(self, modelregistry:BaseModelregistry=None, toolregistry:BaseToolregistry=None):
         from app.gen.agents.{{agent.uid | aiurnpath}}.agent import BaseAgent as {{agent.uid | aiurnpath | capitalize}}
         modelregistry = modelregistry or self.ModelRegistryBean()
         toolregistry = toolregistry or self.ToolRegistryBean()
