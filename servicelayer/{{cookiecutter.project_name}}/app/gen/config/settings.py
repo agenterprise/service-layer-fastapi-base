@@ -24,6 +24,14 @@ class EnvEnum(str, Enum):
     loadtest = 'loadtest'
 
 
+class LLMSettings(BaseSettings):
+    {% for key, llm in cookiecutter.llms.items() %}
+    {{llm.uid | aiurnvar}}_api_key:str = "your api key"
+    {{llm.uid | aiurnvar}}_model_name:str = Field({{llm.model}}, description="Model name or identifier")
+    {{llm.uid | aiurnvar}}_endpoint:str = Field({{llm.endpoint}}, description="API endpoint for the LLM")
+    {{llm.uid | aiurnvar}}_version:str = Field({{llm.version}}, description="Version of the LLM API")
+    {% endfor %}
+   
                       
 class BaseAISettings(BaseSettings):
     run_environment: str = Field(EnvEnum.base, description="Environment the app is running in")  
@@ -35,5 +43,12 @@ class BaseAISettings(BaseSettings):
     uvicorn_log_level: str = Field("info", description="Logging level for Uvicorn")
     uvicorn_env_file: str = Field(".env", description="The env file to load environment variables from")
     log_format:str = Field("%(levelname)s: %(message)s")
+    log_level:str = Field("INFO")
+
+class ToolSettings(BaseSettings):
+    pass
+
+class CrossCuttingSettings(BaseSettings):
+    log_format:str = Field("%(asctime)s %(levelname)s: %(message)s")
     log_level:str = Field("INFO")
 

@@ -1,76 +1,65 @@
-from app.gen.config.service_settings import BaseAISettings
-from app.gen.config.crosscutting_settings import CrossCuttingSettings
-
-setting = BaseAISettings()
-crosscutting = CrossCuttingSettings()
+from app.gen.config.settings import BaseAISettings, CrossCuttingSettings, LLMSettings, ToolSettings
 
 class BaseEnvironmentContext():
     
-    from app.gen.domainmodel.modelregistry import BaseModelregistry
-    from app.gen.domainmodel.toolregistry import BaseToolregistry
-
-
-    def IoCContainerBean(self,
-                      middleware, router, modelregistry, toolregistry):
-        
-        from app.gen.ioc.IoCContainer import IoCContainer
-        return IoCContainer(
-                middleware=middleware, 
-                router=router, 
-                modelregistry=modelregistry, 
-                toolregistry=toolregistry)
     
-    def AIAppBean(self,container, title:str, version:str):
+    def AIAppBean(self,baserouters, middleware, title:str, version:str):
         from app.gen.aiapp import BaseAIApp
-        return BaseAIApp(iocContainer=container, title=title, version=version)
+        return BaseAIApp(baserouters, middleware, title=title, version=version)
 
     def HttpMiddlewareBean(self):
         from app.gen.middleware.http import BaseHttpMiddleware as HttpMiddleware
         return HttpMiddleware()
     
-    def ModelRegistryBean(self):
-        from app.gen.aimodel.registry import baseAimodelregistry
-        return baseAimodelregistry
-    
-    def ToolRegistryBean(self):
-        from app.gen.tool.registry import baseToolregistry
-        return baseToolregistry
-    
+   
+
+    def ToolSettingsBean(self):
+        return ToolSettings()   
+    def LLMSettingsBean(self):
+        return LLMSettings()
+    def BaseAiSettingsBean(self):
+        return BaseAISettings()
+    def CrossCuttingSettingsBean(self):
+        return CrossCuttingSettings()  
+
+    """ Language Models""" 
     {% for key, llm in cookiecutter.llms.items() %}
     def {{llm.uid | aiurnvar | capitalize }}LLMBean(self):
         from app.gen.aimodel.{{llm.uid | aiurnimport}}.model import BaseLanguageModel as {{llm.uid | aiurnvar | capitalize}}
-        return {{llm.uid | aiurnvar | capitalize}}()
+        return {{llm.uid | aiurnvar | capitalize}}(settings=self.LLMSettingsBean())
     {% endfor %}
 
+    """ Agents """
+    {% for key, agent in cookiecutter.agents.items() %}
+    def {{agent.uid | aiurnvar | capitalize }}AgentBean(self):
+        from app.gen.agents.{{agent.uid | aiurnimport}}.agent import BaseAgent as {{agent.uid | aiurnvar | capitalize}}
+        llmmodel = self.{{agent.llmref | aiurnvar | capitalize}}LLMBean()
+        
+        return {{agent.uid | aiurnvar | capitalize}}(llmmodel=llmmodel,{% for ref in agent.toolrefs %}{{ref | aiurnvar}} = self.{{ref | aiurnvar | capitalize }}ToolBean(), {% endfor %})
+    {% endfor %}
+
+    """ Tools """
     {% for key, tool in cookiecutter.tools.items() %}
     def {{tool.uid | aiurnvar | capitalize }}ToolBean(self):
         from app.gen.tool.{{tool.uid | aiurnimport}}.tool import BaseTool as {{tool.uid | aiurnvar | capitalize}}
-        return {{tool.uid | aiurnvar | capitalize}}()
+        return {{tool.uid | aiurnvar | capitalize}}(settings=self.ToolSettingsBean())
     {% endfor %}
 
-    {% for key, agent in cookiecutter.agents.items() %}
-    def {{agent.uid | aiurnvar | capitalize }}AgentBean(self, modelregistry:BaseModelregistry=None, toolregistry:BaseToolregistry=None):
-        from app.gen.agents.{{agent.uid | aiurnimport}}.agent import BaseAgent as {{agent.uid | aiurnvar | capitalize}}
-        modelregistry = modelregistry or self.ModelRegistryBean()
-        toolregistry = toolregistry or self.ToolRegistryBean()
-        return {{agent.uid | aiurnvar | capitalize}}(modelregistry=modelregistry, toolregistry=toolregistry)
-    {% endfor %}
-
+    """ Router """
     def RouterBean(self,{% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}Agent,{% endfor %}):
         from app.gen.routes.router import BaseRouter as Router
         return Router({% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}={{agent.uid | aiurnvar}}Agent,{% endfor %})
     
     def app(self):
-
-        container = self.IoCContainerBean(
-                middleware=self.HttpMiddlewareBean(), 
-                router=self.RouterBean(self.CookAgentBean(),self.WaiterAgentBean()), 
-                modelregistry=self.ModelRegistryBean(), 
-                toolregistry=self.ToolRegistryBean())
+        """ Application instance """
         
-        return self.AIAppBean(container, title=setting.app_name, version=setting.app_version)
+        return self.AIAppBean(middleware=self.HttpMiddlewareBean(), 
+                              baserouters=[self.RouterBean(self.CookAgentBean(),self.WaiterAgentBean())], 
+                              title=self.BaseAiSettingsBean().app_name, 
+                              version=self.BaseAiSettingsBean().app_version)
 
     def logger_conf(self):
+        """ Logging configuration """
         return {
             "version": 1,
             "disable_existing_loggers": False,
@@ -109,7 +98,7 @@ class BaseEnvironmentContext():
                 }
             },
             "root": {
-                "level": crosscutting.log_level,
+                "level": self.CrossCuttingSettingsBean().log_level,
                 "handlers": ["default"],
                 "propagate": False
             }

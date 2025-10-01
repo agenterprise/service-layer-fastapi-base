@@ -1,12 +1,13 @@
 import uvicorn
 import traceback
 import logging
-from app.gen.config.service_settings import BaseAISettings, EnvEnum
-from app.gen.config.crosscutting_settings import CrossCuttingSettings
+from app.gen.config.settings import BaseAISettings, EnvEnum, CrossCuttingSettings
+
 
 settings = BaseAISettings()
-logger = logging.getLogger(__name__)
 crosscutting = CrossCuttingSettings()
+logger = logging.getLogger(__name__)
+
 def app():
    
     try:

@@ -5,7 +5,7 @@ from app.gen.config.base import BaseEnvironmentContext as BaseEnvironmentContext
 setting = BaseAISettings()
 crosscutting = CrossCuttingSettings()
 
-class DevContext(BaseEnvironmentContext):
+class UatContext(BaseEnvironmentContext):
     pass   
    
 

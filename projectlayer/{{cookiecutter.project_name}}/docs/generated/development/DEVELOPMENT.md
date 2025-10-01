@@ -4,7 +4,7 @@ See https://docs.astral.sh/uv/getting-started/installation/ for how to install
 
 # Virtual Environment
 ```bash
-uv init
+uv venv
 ```
 Afterwards activate your virtual envrionment by 
 ```bash
