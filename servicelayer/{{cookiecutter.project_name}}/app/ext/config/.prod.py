@@ -4,8 +4,10 @@ from app.gen.config.base import BaseEnvironmentContext as BaseEnvironmentContext
 setting = BaseAISettings()
 crosscutting = CrossCuttingSettings()
 
-class UserAcceptanceEnvironmentContext(BaseEnvironmentContext):
+class ProductionEnvironmentContext(BaseEnvironmentContext):
     pass   
    
-
+class ReferenceEnvironmentContext(BaseEnvironmentContext):
+    pass   
+   
  

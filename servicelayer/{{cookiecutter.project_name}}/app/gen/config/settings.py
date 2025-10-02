@@ -19,7 +19,7 @@ class EnvEnum(str, Enum):
     uat = 'uat'
     int = 'int'
     prod = 'prod'
-    unittest = 'unittest'
+    ref = 'ref'
     systemtest = 'systemtest'
     loadtest = 'loadtest'
 

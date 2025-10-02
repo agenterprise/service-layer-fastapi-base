@@ -1,0 +1,29 @@
+""" Shows one way to assemble an own AIApp 
+    * rename this file to dev.py
+    * rename /app/ext/routes/example.py.txt to /app/ext/routes/example.py
+    * set run_environment=dev in .env file
+
+    after starting up, you'll see hello at http://localhost:9000/docs#/ 
+
+"""
+
+from app.gen.config.settings import BaseAISettings, CrossCuttingSettings
+from app.gen.config.base import BaseEnvironmentContext as BaseEnvironmentContext   
+setting = BaseAISettings()
+crosscutting = CrossCuttingSettings()
+ 
+class ExampleEnvironmentContext(BaseEnvironmentContext):
+    from app.ext.routes.example import BaseRouter
+
+    def AIAppBean(self,baserouters, middleware, title:str, version:str):
+        from app.gen.aiapp import BaseAIApp
+        myrouter = self.MyRouterBean()
+        baserouters.append(myrouter)
+        return BaseAIApp(baserouters, middleware, title=title, version=version)
+   
+
+    def MyRouterBean(self):
+        return BaseRouter()
+ 
+
+ 
