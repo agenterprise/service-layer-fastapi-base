@@ -10,6 +10,7 @@
      "_copy_without_render": [       
     ],
     "layerversion": "0.0.1",
-    "layername": "servicelayer"
+    "layername": "servicelayer",
+    "agenterprise_version": ">=0.1.0, <0.2.0"
 
 }
