@@ -27,6 +27,10 @@ DOCKER_BUILDKIT=1 docker build \
 ```bash
 docker run --publish 9000:9000 --env-file .env --rm {{ cookiecutter.package_name}}
 ```
+## Troubleshooting
+### Ensure .env file format
+.env files that will be provided to docker have to ommit quotes. Otherwise the quotes will be part of the assignment.
+
 
 ### Inspect the Image
 ```bash
