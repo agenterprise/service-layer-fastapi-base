@@ -8,7 +8,7 @@ echo "https://pypi.org/simple/" > pip_index_url.txt
 # Build the Docker image using BuildKit and mount the secret
 DOCKER_BUILDKIT=1 docker build \
   --secret id=pip_index_url,src=pip_index_url.txt \
-  -t build_{{cookiecutter.project_build_id}} -f deployment/Dockerfile.build .
+  -t build_{{cookiecutter.project_build_id | replace('"','')}} -f deployment/Dockerfile.build .
 ```
 ## Build Docker Image based on Build Image 
 This Dockerfile deployment/Dockerfile.run should be copied to deployment/Dockerfile in order to avoid future overwrites
