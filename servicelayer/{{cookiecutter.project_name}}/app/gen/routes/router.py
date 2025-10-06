@@ -27,7 +27,7 @@ class BaseRouter(AbstractRouter):
     
     
         {% for key, agent in cookiecutter.agents.items() %}
-        @self.router.get("/agent/{{agent.name | lower | replace('"', '') }}/ask/{question}", tags=["agents"],response_model={{cookiecutter.agent.uid | aiurnvar | capitalize }}AgentResponse)
+        @self.router.get("/agent/{{agent.name | lower | replace('"', '') }}/ask/{question}", tags=["agents"],response_model={{agent.uid | aiurnvar | capitalize }}AgentResponse)
 
         async def handle_{{agent.uid | aiurnvar}}(request: Request, question):  
             return await self.{{agent.uid | aiurnpath}}.ask(question)
