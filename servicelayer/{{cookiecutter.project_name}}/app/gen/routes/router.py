@@ -6,7 +6,7 @@ from app.gen.routes.health.handler import health as service_health
 from app.gen.domainmodel.router import AbstractRouter
 from app.gen.domainmodel.agent import  AbstractAgent
  {% for key, agent in cookiecutter.agents.items() %}
-from app.gen.agents.{{cookiecutter.agent.uid | aiurnimport}}.response import {{cookiecutter.agent.uid | aiurnvar | capitalize }}AgentResponse
+from app.gen.agents.{{agent.uid | aiurnimport}}.response import {{agent.uid | aiurnvar | capitalize }}AgentResponse
 {% endfor %}
 from fastapi import APIRouter
 
