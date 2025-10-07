@@ -39,7 +39,7 @@ class BaseHttpMiddleware():
                 response = await call_next(request)
                 return response
             # Validate the origin - allow localhost and 127.0.0.1 on any port
-            if not origin or (not origin.startswith("http://localhost") and not origin.startswith("http://127.0.0.1")):
+            if not origin or (not origin.startswith("http://localhost") and not origin.startswith("http://127.0.0.1") and not origin.startswith("http://0.0.0.0")):
                 return JSONResponse(
                     status_code=403,
                     content={"detail": f"Origin '{origin}' is not allowed. Only localhost and 127.0.0.1 are permitted."}

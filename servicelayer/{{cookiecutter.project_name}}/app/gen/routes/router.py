@@ -5,8 +5,19 @@ from fastapi import Request
 from app.gen.routes.health.handler import health as service_health
 from app.gen.domainmodel.router import AbstractRouter
 from app.gen.domainmodel.agent import  AbstractAgent
+
  {% for key, agent in cookiecutter.agents.items() %}
-from app.gen.agents.{{agent.uid | aiurnimport}}.response import {{agent.uid | aiurnvar | capitalize }}AgentResponse
+{% if agent.input %}
+from app.gen.entities.{{agent.input | aiurnimport }}.entity import {{agent.input | aiurnvar | capitalize }}Entity as {{agent.uid | aiurnvar | capitalize}}RequestModel
+{% else %}
+from app.gen.domainmodel.baseentity import BaseInputEntity as {{agent.uid | aiurnvar | capitalize}}RequestModel
+{%endif%}
+
+{% if agent.output %}
+from app.gen.entities.{{agent.output | aiurnimport }}.entity import {{agent.output | aiurnvar | capitalize }}Entity as {{agent.uid | aiurnvar| capitalize}}ResponseModel
+{% else %}
+from app.gen.domainmodel.baseentity import BaseOutputEntity as {{agent.uid | aiurnvar | capitalize}}ResponseModel
+{%endif%}
 {% endfor %}
 from fastapi import APIRouter
 
@@ -27,8 +38,7 @@ class BaseRouter(AbstractRouter):
     
     
         {% for key, agent in cookiecutter.agents.items() %}
-        @self.router.get("/agent/{{agent.name | lower | replace('"', '') }}/ask/{question}", tags=["agents"],response_model={{agent.uid | aiurnvar | capitalize }}AgentResponse)
-
-        async def handle_{{agent.uid | aiurnvar}}(request: Request, question):  
-            return await self.{{agent.uid | aiurnpath}}.ask(question)
+        @self.router.post("/agent/{{agent.name | lower | replace('"', '') }}/ask", tags=["agents"],response_model={{agent.uid | aiurnvar | capitalize}}ResponseModel)
+        async def handle_{{agent.uid | aiurnvar}}(request: Request, query:{{agent.uid | aiurnvar | capitalize}}RequestModel):  
+            return await self.{{agent.uid | aiurnpath}}.ask(query)
         {% endfor %}
