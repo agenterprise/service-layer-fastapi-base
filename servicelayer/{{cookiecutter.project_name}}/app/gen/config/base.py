@@ -23,32 +23,32 @@ class BaseEnvironmentContext():
         return CrossCuttingSettings()  
 
     """ Language Models""" 
-    {% for key, llm in cookiecutter.llms.items() %}
+    {%- for key, llm in cookiecutter.llms.items() %}
     def {{llm.uid | aiurnvar | capitalize }}LLMBean(self):
         from app.gen.aimodel.{{llm.uid | aiurnimport}}.model import BaseLanguageModel as {{llm.uid | aiurnvar | capitalize}}
         return {{llm.uid | aiurnvar | capitalize}}(settings=self.LLMSettingsBean())
-    {% endfor %}
+    {%- endfor %}
 
     """ Agents """
-    {% for key, agent in cookiecutter.agents.items() %}
+    {%- for key, agent in cookiecutter.agents.items() %}
     def {{agent.uid | aiurnvar | capitalize }}AgentBean(self):
         from app.gen.agents.{{agent.uid | aiurnimport}}.agent import BaseAgent as {{agent.uid | aiurnvar | capitalize}}
         llmmodel = self.{{agent.llmref | aiurnvar | capitalize}}LLMBean()
         
-        return {{agent.uid | aiurnvar | capitalize}}(llmmodel=llmmodel,{% for ref in agent.toolrefs %}{{ref | aiurnvar}} = self.{{ref | aiurnvar | capitalize }}ToolBean(), {% endfor %})
-    {% endfor %}
+        return {{agent.uid | aiurnvar | capitalize}}(llmmodel=llmmodel,{%- for ref in agent.toolrefs %}{{ref | aiurnvar}} = self.{{ref | aiurnvar | capitalize }}ToolBean(), {%- endfor %})
+    {%- endfor %}
 
     """ Tools """
-    {% for key, tool in cookiecutter.tools.items() %}
+    {%- for key, tool in cookiecutter.tools.items() %}
     def {{tool.uid | aiurnvar | capitalize }}ToolBean(self):
         from app.gen.tool.{{tool.uid | aiurnimport}}.tool import BaseTool as {{tool.uid | aiurnvar | capitalize}}
         return {{tool.uid | aiurnvar | capitalize}}(settings=self.ToolSettingsBean())
-    {% endfor %}
+    {%- endfor %}
 
     """ Router """
-    def RouterBean(self,{% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}Agent,{% endfor %}):
+    def RouterBean(self,{%- for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}Agent,{%- endfor %}):
         from app.gen.routes.router import BaseRouter as Router
-        return Router({% for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}={{agent.uid | aiurnvar}}Agent,{% endfor %})
+        return Router({%- for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}={{agent.uid | aiurnvar}}Agent,{%- endfor %})
     
     def app(self):
         """ Application instance """
