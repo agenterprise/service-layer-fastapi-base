@@ -54,7 +54,7 @@ class BaseEnvironmentContext():
         """ Application instance """
         
         return self.AIAppBean(middleware=self.HttpMiddlewareBean(), 
-                              baserouters=[self.RouterBean(self.CookAgentBean(),self.WaiterAgentBean())], 
+                              baserouters=[self.RouterBean({%- for key, agent in cookiecutter.agents.items() %}self.{{agent.uid | aiurnvar | capitalize}}AgentBean(),{%- endfor %})], 
                               title=self.BaseAiSettingsBean().app_name, 
                               version=self.BaseAiSettingsBean().app_version)
 
