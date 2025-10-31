@@ -8,5 +8,7 @@
 
     ],
     "layerversion": "0.0.1",
-    "dsl_file": ""
+    "dsl_file": "",
+    "agenterprise_version": ">=0.1.0, <0.2.0",
+    "layername": "projectlayer"
 }

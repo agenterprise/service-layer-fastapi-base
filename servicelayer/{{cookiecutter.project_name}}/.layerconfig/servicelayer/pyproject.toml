@@ -8,8 +8,7 @@ servicelayer = [
     "requests>=2.32.5",
     "uvicorn>=0.35.0",
     "pydantic-settings>=2.10.1",
-    "colorlog",
-    "agenterprise{{cookiecutter.agenterprise_version}}"
+    "colorlog"
 ]
 
 

@@ -50,22 +50,27 @@ Agenterprise princple is **"Give your AI project anchors and wings"**. Means: Th
 
 ## Your Code vs. Agenterprise Code
 Agenterprise generates a lot of code for you. This code should not be edited or extended. The following files and folders are subject to change:
-* <i>app/gen</i>
-* <i>docs/generated</i>
+* <i>app/gen/**</i>
+* <i>docs/generated/**</i>
 * <i>deployment/Dockerfile.build</i>
 * <i>deployment/Dockerfile.run</i>
 
 
-## Extend with your DSL (The anchors)
+## ⚓ Extend with your DSL (The anchors )
 The origin DSL is copied and placed below folder ./dsl/{{cookiecutter.dsl_file}}. It's possible to edit the file all the time (pls. consult https://www.agenterprise.ai)
 
-If you want to regenerate you project, feel happy 😃 -->  <i>agenterprise</i> is already in your path.
-In the project root execute this command.
-```bash
-agenterprise --dsl dsl/{{cookiecutter.dsl_file}}  --code-generation --target ./
-```
+If you want to regenerate you project, feel happy 😃 -->  <i>agenterprise</i> is already in your path. 
 
-## Extend with custom code (The wings)
+1. Upgrade to the latest version of agenterprise by calling:
+    ```bash
+    uv sync --group projectlayer --upgrade
+    ```
+2. In the project root execute this command.
+    ```bash
+    agenterprise --dsl dsl/{{cookiecutter.dsl_file}}  --code-generation --target ./
+    ```
+
+## 🪽 Extend with custom code (The wings )
 At folder <i>app/ext</i> you can freely implement anything that should be on top of the anchors.
 The folder structure aligns to the one below <i>app/gen</i>. You can either:
 * Extend the classes from <i>app/gen</i>.

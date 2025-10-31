@@ -9,8 +9,8 @@
         "local_extensions.AIURNExtension"],
      "_copy_without_render": [       
     ],
+    "dsl_file": "",
     "layerversion": "0.0.1",
-    "layername": "servicelayer",
-    "agenterprise_version": ">=0.1.0, <0.2.0"
+    "layername": "servicelayer"
 
 }
