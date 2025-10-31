@@ -63,7 +63,7 @@ If you want to regenerate you project, feel happy 😃 -->  <i>agenterprise</i> 
 
 1. Upgrade to the latest version of agenterprise by calling:
     ```bash
-    uv sync --group projectlayer --upgrade
+    uv pip install -U agenterprise --group projectlayer 
     ```
 2. In the project root execute this command.
     ```bash
