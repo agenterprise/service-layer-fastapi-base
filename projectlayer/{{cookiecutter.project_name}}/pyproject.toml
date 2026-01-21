@@ -10,3 +10,17 @@ dev = [
     "pytest>=8.4.2",
     "pytest-cov>=7.0.0",
     "debugpy"]
+
+# Configure Python package indexes for uv
+# Uncomment and modify to use custom indexes
+[[tool.uv.index]]
+name = "default"
+url = "https://pypi.org/simple"
+priority = "primary"
+#
+# [[tool.uv.index]]
+# name = "custom"
+# url = "https://your-custom-index.com/simple"
+# priority = "supplemental"
+
+
