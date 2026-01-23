@@ -12,10 +12,17 @@ source .venv/bin/activate
 ```
 
 # Dependencies
+## Default 
+In pyproject.toml there is a default package index pointing to "https://pypi.org/simple"
 Sync your environment to get all dependencies needed.
 ```bash
 uv sync --all-groups
 ```
+## Enterprise Context
+If you need to use different index, two changes are possible
+* Change in pyproject.toml the index below [[tool.uv.index]] to your index
+* Add the index to uv sync via option --index-url YOUR_INDEX
+
 
 # Run
 Set the environment variable
@@ -42,7 +49,7 @@ uv run python -m debugpy --listen 0.0.0.0:5678 --wait-for-client app/main.py
 At ".vscode/launch.json" there is a debugger configured. Just hit play at "Debug {{cookiecutter.project_name}}"
 
 # API
-Foundation of {{cookiecutter.project_name}}'s' service layer is [FastAPI](https://fastapi.tiangolo.com/) in other projects. You can review the API Documentation at http://0.0.0.0:9000/docs or http://0.0.0.0:9000/redoc
+Foundation of {{cookiecutter.project_name}}'s' service layer is [FastAPI](https://fastapi.tiangolo.com/) in other projects. You can review the API Documentation at http://0.0.0.0:9000/docs/swagger
 
 
 # How to extend project "{{cookiecutter.project_name}}"

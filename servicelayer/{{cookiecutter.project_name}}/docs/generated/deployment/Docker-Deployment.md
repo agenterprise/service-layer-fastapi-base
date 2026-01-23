@@ -1,4 +1,10 @@
-# Deployment
+# Docker Deployment
+
+## Custom Container Hub
+Default hub points to docker.io, if you need to modify this, add to the build command the argument REGISTRY
+like this ```docker build --build-arg REGISTRY=my-private-hub.com .```
+
+
 ## Build Docker Image with external pip index as Build Image
 Note: This image acts as a build image only!
 ```bash
@@ -8,17 +14,19 @@ echo "https://pypi.org/simple/" > pip_index_url.txt
 # Build the Docker image using BuildKit and mount the secret
 DOCKER_BUILDKIT=1 docker build \
   --secret id=pip_index_url,src=pip_index_url.txt \
-  -t build_{{cookiecutter.project_build_id | replace('"','')}} -f deployment/Dockerfile.build .
+  --build-arg REGISTRY=docker.io \
+  -t build_{{cookiecutter.project_build_id | replace('"','')}} -f deployment/Container.build .
 ```
 ## Build Docker Image based on Build Image 
-This Dockerfile deployment/Dockerfile.run should be copied to deployment/Dockerfile in order to avoid future overwrites
+This Container deployment/Container.run should be copied to deployment/Container in order to avoid future overwrites
 ```bash
-# Make the Run Dockerfile your own
-cp  deployment/Dockerfile.run  deployment/Dockerfile
+# Make the Run Container your own
+cp  deployment/Container.run  deployment/Container
 
 # Build the Docker image using BuildKit and mount the secret
 DOCKER_BUILDKIT=1 docker build \
-  -t {{cookiecutter.package_name}} -f deployment/Dockerfile .
+  --build-arg REGISTRY=docker.io \
+  -t {{cookiecutter.package_name}} -f deployment/Container .
 ```
 ## Run AI Environment
 * Publish Port 9000 to local port 9000

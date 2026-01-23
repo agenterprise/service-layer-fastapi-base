@@ -1,4 +1,10 @@
+
+from a2a.server.apps import A2AFastAPIApplication
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.tasks import InMemoryTaskStore
+
 from app.gen.config.settings import BaseAISettings, CrossCuttingSettings, LLMSettings, ToolSettings
+from app.gen.domainmodel.a2a_agent_executor import A2AAgentExecutor
 
 class BaseEnvironmentContext():
     
@@ -35,7 +41,7 @@ class BaseEnvironmentContext():
         from app.gen.agents.{{agent.uid | aiurnimport}}.agent import BaseAgent as {{agent.uid | aiurnvar | capitalize}}
         llmmodel = self.{{agent.llmref | aiurnvar | capitalize}}LLMBean()
         
-        return {{agent.uid | aiurnvar | capitalize}}(llmmodel=llmmodel,{%- for ref in agent.toolrefs %}{{ref | aiurnvar}} = self.{{ref | aiurnvar | capitalize }}ToolBean(), {%- endfor %})
+        return {{agent.uid | aiurnvar | capitalize}}(llmmodel=llmmodel,{%- for ref in agent.toolrefs %}{{ref | aiurnvar}} = self.{{ref | aiurnvar | capitalize }}ToolBean(),{%- endfor %} settings=self.BaseAiSettingsBean())
     {%- endfor %}
 
     """ Tools """
@@ -50,13 +56,33 @@ class BaseEnvironmentContext():
         from app.gen.routes.router import BaseRouter as Router
         return Router({%- for key, agent in cookiecutter.agents.items() %}{{agent.uid | aiurnvar}}={{agent.uid | aiurnvar}}Agent,{%- endfor %})
     
+    def a2a_app(self, app):
+        agents = []
+        {%- for key, agent in cookiecutter.agents.items() %}
+        agents.append(self.{{agent.uid | aiurnvar | capitalize}}AgentBean())
+        {%- endfor %}
+        for agent in agents:
+            request_handler = DefaultRequestHandler(
+                agent_executor=A2AAgentExecutor(agent=agent),
+                task_store=InMemoryTaskStore(),
+            )
+            server = A2AFastAPIApplication(
+                agent_card=agent.get_agentcard(),
+                http_handler=request_handler
+            )
+            app.mount(agent.a2a_path, app=server.build(redoc_url=None, docs_url=None))
+        return app
+
     def app(self):
         """ Application instance """
-        
-        return self.AIAppBean(middleware=self.HttpMiddlewareBean(), 
+        app =  self.AIAppBean(middleware=self.HttpMiddlewareBean(), 
                               baserouters=[self.RouterBean({%- for key, agent in cookiecutter.agents.items() %}self.{{agent.uid | aiurnvar | capitalize}}AgentBean(),{%- endfor %})], 
                               title=self.BaseAiSettingsBean().app_name, 
                               version=self.BaseAiSettingsBean().app_version)
+
+        app = self.a2a_app(app)
+        return app
+
 
     def logger_conf(self):
         """ Logging configuration """

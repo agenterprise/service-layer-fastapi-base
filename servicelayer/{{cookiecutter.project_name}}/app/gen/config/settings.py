@@ -35,6 +35,7 @@ class LLMSettings(BaseSettings):
                       
 class BaseAISettings(BaseSettings):
     run_environment: str = Field(EnvEnum.base, description="Environment the app is running in")  
+    pub_url: str = Field("http://localhost:9000", description="The public URL of the application")
     app_name:str = Field("AI-Environment {{cookiecutter.project_name}}", description="The name of the application")
     app_version:str = Field("0.1.0", description="The version of the application")
     uvicorn_host: IPvAnyAddress = Field("0.0.0.0", description="The host for Uvicorn to bind to")

@@ -38,7 +38,7 @@ class BaseRouter(AbstractRouter):
     
     
         {%- for key, agent in cookiecutter.agents.items() %}
-        @self.router.post("/agent/{{agent.name | lower | replace('"', '') }}/ask", tags=["agents"],response_model={{agent.uid | aiurnvar | capitalize}}ResponseModel)
+        @self.router.post("/agent/api/{{agent.name | lower | replace('"', '') }}/ask", tags=["agents"],response_model={{agent.uid | aiurnvar | capitalize}}ResponseModel)
         async def handle_{{agent.uid | aiurnvar}}(request: Request, query:{{agent.uid | aiurnvar | capitalize}}RequestModel):  
             return await self.{{agent.uid | aiurnpath}}.ask(query)
         {%- endfor %}

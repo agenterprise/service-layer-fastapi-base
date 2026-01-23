@@ -1,7 +1,9 @@
-# Dockerfile.jinja2 for multi-stage build
-FROM python:3.12-slim AS build_{{cookiecutter.project_build_id | replace('"','')}}
+ARG REGISTRY=docker.io
+FROM ${REGISTRY}/python:3.12-slim AS build_{{cookiecutter.project_build_id | replace('"','')}}
 WORKDIR /env
 COPY  app /env/app/
+COPY  static /env/static/
+
 COPY pyproject.toml /env/pyproject.toml
 
 RUN python -m venv .venv

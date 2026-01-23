@@ -7,7 +7,7 @@
     "project_build_id": "{{ cookiecutter.project_build_id }}",
     "_extensions": [
         "local_extensions.AIURNExtension"],
-     "_copy_without_render": [       
+     "_copy_without_render": [   "static/swagger/*.js", "static/swagger/*.css", "static/swagger/*.png"
     ],
     "dsl_file": "",
     "layerversion": "0.0.1",
